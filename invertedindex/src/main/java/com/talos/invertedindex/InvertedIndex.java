@@ -5,8 +5,6 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
-import org.tartarus.martin.Stemmer;
-
 public final class InvertedIndex {
 
 	private static final String ALPHANUM_REGEX = "[^a-zA-Z0-9\\s]";
@@ -25,23 +23,12 @@ public final class InvertedIndex {
 	}
 
 	/**
-	 * Indexes the previously loaded data. 
-	 * @param stem Boolean parameter to stem.
-	 * @param stopWords Stop words to rule out of the indexing. Can be null.
+	 * Indexes the previously loaded data.
+	 * 
+	 * @param stopWords
+	 *            Stop words to be ruled out from the indexing. Can be null.
 	 */
-	public void indexData(boolean stem, List<String> stopWords)
-	{
-		if (stem)
-		{
-			indexDataWithStemming(stopWords);
-		}
-		else
-		{
-			indexDataWithoutStemming(stopWords);
-		}
-	}
-	
-	private void indexDataWithoutStemming(List<String> stopWords) {
+	public void indexData(List<String> stopWords) {
 		assert documents != null : "No documents loaded!";
 		for (Document nextDocument : documents) {
 			String[] tokensInDocument = nextDocument.getContent().split(
@@ -53,41 +40,22 @@ public final class InvertedIndex {
 	}
 
 	/**
-	 * Applies stemming to the tokens. Uses the 
-	 * @param stopWords
-	 */
-	private void indexDataWithStemming(List<String> stopWords) {
-		assert documents != null : "No documents loaded!";
-		for (Document nextDocument : documents) {
-			String[] tokensInDocument = nextDocument.getContent().split(
-					ESCAPED_SPACE);
-			for (String nextTokenInDocument : tokensInDocument) {
-				char[] tokenChars = nextTokenInDocument.toCharArray();
-				Stemmer stemmer = new Stemmer();
-				for (char nextChar : tokenChars) {
-					stemmer.add(nextChar);
-				}
-				stemmer.stem();
-				String stemmedToken = new String(stemmer.getResultBuffer());
-				indexToken(stemmedToken, nextDocument, stopWords);
-			}
-		}
-	}
-
-	/**
-	 * Indexes the tokenToIndex regarding the passed document. Does not index the token if it is a stop word.
+	 * Indexes the tokenToIndex regarding the passed document. Does not index
+	 * the token if it is a stop word.
+	 * 
 	 * @param tokenToIndex
 	 * @param document
-	 * @param stopWords Can be null.
+	 * @param stopWords
+	 *            Can be null.
 	 */
-	private void indexToken(String tokenToIndex, Document document, List<String> stopWords) {
+	private void indexToken(String tokenToIndex, Document document,
+			List<String> stopWords) {
 		assert tokenToIndex != null : "No token found!";
 		assert document != null : "No document found";
 
 		tokenToIndex = getNormalizedToken(tokenToIndex);
-		if (stopWords != null && stopWords.contains(tokenToIndex))
-		{
-			//Don't index stop words.
+		if (stopWords != null && stopWords.contains(tokenToIndex)) {
+			// Don't index stop words.
 			return;
 		}
 
@@ -106,6 +74,7 @@ public final class InvertedIndex {
 
 	/**
 	 * Transforms to lower case and removes non alpha-numeric characters.
+	 * 
 	 * @param token
 	 * @return Normalized token.
 	 */
@@ -117,7 +86,8 @@ public final class InvertedIndex {
 
 	/**
 	 * @param searchedText
-	 * @return The text of the documents where the searched text has occurrences.
+	 * @return The text of the documents where the searched text has
+	 *         occurrences.
 	 */
 	public String[] get(String searchedText) {
 		assert searchedText != null : "Nothing to search";
