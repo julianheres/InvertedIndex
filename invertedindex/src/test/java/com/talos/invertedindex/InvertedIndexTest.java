@@ -10,8 +10,10 @@ import org.junit.Test;
 
 public class InvertedIndexTest {
 
+	private static final String OPINION = "opinion";
 	private static final String WRITES = "writes";
 	private static final String MUSIC = "music";
+	
 	private static final String[] DATA_1 = new String[] {
 			"A brilliant, festive study of JS Bach uses literature and painting to illuminate his 'dance-impregnated' music, writes Peter Conrad",
 			"Fatima Bhutto on Malala Yousafzai's fearless and still-controversial memoir",
@@ -58,6 +60,7 @@ public class InvertedIndexTest {
 	// Requested queries
 	@Test
 	public void testInvertedIndexIncludingStopWords1() {
+		System.out.println("Test");
 		long timeBeforeIndexing = System.currentTimeMillis();
 		InvertedIndex invertedIndex = new InvertedIndex(DATA_1);
 		invertedIndex.indexData(null);
@@ -74,7 +77,7 @@ public class InvertedIndexTest {
 						+ (timeAfterSearching - timeBeforeSearching)
 						+ " milliseconds");
 		assertTrue(results.length == 2);
-		System.out.println(results.length);
+		System.out.println("Number of results: " + results.length);
 		String actualResults = Arrays.toString(results);
 		String expectedResults = Arrays
 				.toString(
@@ -88,6 +91,7 @@ public class InvertedIndexTest {
 
 	@Test
 	public void testInvertedIndexIncludingStopWords2() {
+		System.out.println("Test");
 		long timeBeforeIndexing = System.currentTimeMillis();
 		InvertedIndex invertedIndex = new InvertedIndex(DATA_1);
 		invertedIndex.indexData(null);
@@ -104,7 +108,7 @@ public class InvertedIndexTest {
 						+ (timeAfterSearching - timeBeforeSearching)
 						+ " milliseconds");
 		assertTrue(results.length == 2);
-		System.out.println(results.length);
+		System.out.println("Number of results: " + results.length);
 		String actualResults = Arrays.toString(results);
 		String expectedResults = Arrays
 				.toString(
@@ -119,6 +123,7 @@ public class InvertedIndexTest {
 	// Additional Queries
 	@Test
 	public void testInvertedIndexExcludingStopWords1() {
+		System.out.println("Test");
 		long timeBeforeIndexing = System.currentTimeMillis();
 		InvertedIndex invertedIndex = new InvertedIndex(DATA_1);
 		invertedIndex.indexData(englishStopWords);
@@ -135,7 +140,7 @@ public class InvertedIndexTest {
 						+ (timeAfterSearching - timeBeforeSearching)
 						+ " milliseconds");
 		assertTrue(results.length == 2);
-		System.out.println(results.length);
+		System.out.println("Number of results: " + results.length);
 		String actualResults = Arrays.toString(results);
 		String expectedResults = Arrays
 				.toString(
@@ -148,7 +153,37 @@ public class InvertedIndexTest {
 	}
 	
 	@Test
+	public void testInvertedIndexIncludingStopWords3() {
+		System.out.println("Test");
+		long timeBeforeIndexing = System.currentTimeMillis();
+		InvertedIndex invertedIndex = new InvertedIndex(DATA_2);
+		invertedIndex.indexData(englishStopWords);
+		long timeAfterIndexing = System.currentTimeMillis();
+		System.out
+				.println("Time indexing including stop words: "
+						+ (timeAfterIndexing - timeBeforeIndexing)
+						+ " milliseconds");
+		long timeBeforeSearching = System.currentTimeMillis();
+		String[] results = invertedIndex.get(OPINION);
+		long timeAfterSearching = System.currentTimeMillis();
+		System.out
+				.println("Time searching including stop words: "
+						+ (timeAfterSearching - timeBeforeSearching)
+						+ " milliseconds");
+		assertTrue(results.length == 1);
+		System.out.println("Number of results: " + results.length);
+		String actualResults = Arrays.toString(results);
+		String expectedResults = Arrays
+				.toString(
+						new String[] { "He share of first to worse. Weddings and any opinion suitable smallest nay. My he houses or months settle remove ladies appear. Engrossed suffering supposing he recommend do eagerness. Commanded no of depending extremity recommend attention tolerably. Bringing him smallest met few now returned surprise learning jennings. Objection delivered eagerness he exquisite at do in. Warmly up he nearer mr merely me." })
+				.toString();
+		assertEquals(expectedResults, actualResults);
+		System.out.println(actualResults);
+	}
+	
+	@Test
 	public void testInvertedIndexExcludingStopWords2() {
+		System.out.println("Test");
 		long timeBeforeIndexing = System.currentTimeMillis();
 		InvertedIndex invertedIndex = new InvertedIndex(DATA_2);
 		invertedIndex.indexData(englishStopWords);
@@ -158,14 +193,14 @@ public class InvertedIndexTest {
 						+ (timeAfterIndexing - timeBeforeIndexing)
 						+ " milliseconds");
 		long timeBeforeSearching = System.currentTimeMillis();
-		String[] results = invertedIndex.get("opinion");
+		String[] results = invertedIndex.get(OPINION);
 		long timeAfterSearching = System.currentTimeMillis();
 		System.out
 				.println("Time searching excluding stop words: "
 						+ (timeAfterSearching - timeBeforeSearching)
 						+ " milliseconds");
 		assertTrue(results.length == 1);
-		System.out.println(results.length);
+		System.out.println("Number of results: " + results.length);
 		String actualResults = Arrays.toString(results);
 		String expectedResults = Arrays
 				.toString(
